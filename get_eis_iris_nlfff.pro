@@ -45,7 +45,7 @@ f = file_search(nlfff_path, 'nlfff_results.sav')
   str = eis_obs_structure(reltime(t0,hours=-12), reltime(t0,hours=12), /quick, /quiet)
   dist_from_iris = sqrt((str.xcen - iris_info.xcen)^2. + (str.ycen - iris_info.ycen)^2.)
   eis_info = str[where(dist_from_iris eq min(dist_from_iris), /null)]
-  eis_info = str[-5]
+  eis_info = str[2]
   p03 = plot(eis_info.xcen + 0.5*eis_info.fovx*[-1, -1, 1, 1, -1], $
              eis_info.ycen + 0.5*eis_info.fovy*[-1, 1, 1, -1, -1], over=im01, $
              'b2', trans=50)
@@ -56,6 +56,7 @@ f = file_search(nlfff_path, 'nlfff_results.sav')
   w01.save, 'FOV_comp.png', resol=200
   w01.close
   blos_filename = filenames[0]
+  stop
   save, iris_info, eis_info, index_blos, blos_filename, filename='instr_info.sav'
 ;stop
 ;endfor

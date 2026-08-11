@@ -1,6 +1,14 @@
-pro nlfff_cal, cen, xr, yr, ref_time_str0
+pro nlfff_cal, cen, xr, yr, ref_time_str0, save_current_path = save_current_path
 
 cd, current=path
+if ~keyword_set(save_current_path) then begin
+  save_path = path + path_sep() + ref_time_str0
+  file_mkdir, save_path
+  cd, save_path
+endif else begin
+  save_path = path      
+endelse
+
 
 ; Select the FOV
 
@@ -23,9 +31,6 @@ ref_time = anytim(ref_time_str)
 ; If not, remove /files_only keyword and download them. 
 files_only = 1
  
-save_path = path + path_sep() + ref_time_str0
-file_mkdir, save_path
-cd, save_path 
 ssw_jsoc_time2data, anytim(ref_time-360, /ccsds), anytim(ref_time+360, /ccsds), $
                     index_i, ds='hmi.B_720s', segment='inclination', $
                     files_only=files_only, inclination_file, /silent
@@ -46,11 +51,11 @@ ssw_jsoc_time2data, anytim(ref_time-6, /ccsds), anytim(ref_time+6, /ccsds), $
 ;inclination_file = file_search(hmi_path, '*inclination.fits')
 ;field_file = file_search(hmi_path, '*field.fits')
 ;disambig_file = file_search(hmi_path, '*disambig.fits')
-read_sdo, azimuth_file[0], dum, azi_data
-read_sdo, inclination_file[0], dum, inc_data
-read_sdo, field_file[0], dum, field_data
-read_sdo, disambig_file[0], dum, disamb_data
-read_sdo, aia171_file[0], dum, aia171_data
+read_sdo, azimuth_file[0], dum, azi_data, /sil, /noshell, /use_shared_lib
+read_sdo, inclination_file[0], dum, inc_data, /sil, /noshell, /use_shared_lib
+read_sdo, field_file[0], dum, field_data, /sil, /noshell, /use_shared_lib
+read_sdo, disambig_file[0], dum, disamb_data, /sil, /noshell, /use_shared_lib
+read_sdo, aia171_file[0], dum, aia171_data, /sil, /noshell, /use_shared_lib
 
 hmi_time = anytim2tai(index_i.date_obs)
 
@@ -269,54 +274,55 @@ cd, path
 print, string((systime(/sec) - init_time)/60., f='(f0.2)')+' min'
 end
 
-time_str = ['20140704_114000', $
-            '20140705_230030', $
-            '20150224_190314', $
-            '20190410_121535', $
-            '20190412_145240', $
-            '20190413_013438', $
-            '20190413_113910', $
-            '20190417_011605', $
-            '20190417_154227', $
-            '20200402_224709', $
-            '20200403_011735', $
-            '20200404_021153', $
-            '20200405_120335', $
-            '20200405_184659', $
-            '20200406_164019', $
-            '20200406_233539', $
-            '20200407_025456', $
-            '20190415_124334', $
-            '20190415_215330']
-center = [[-107.5, -243.5], $
-          [139.5, -244.5], $
-          [37.0, -40.0], $
-          [-685.5, 174.0], $
-          [-310.0, 197.5], $
-          [-227.5, 200.5], $
-          [-140.5, 202.0], $
-          [595.0, 168.0], $
-          [684.0, 158.5], $
-          [-401.0, 540.0], $
-          [-383.0, 542.0], $
-          [-199.0, 547.5], $
-          [68.0, 548.5], $
-          [124.5, 548.5], $
-          [289.5, 546.0], $
-          [344.5, 540.0], $
-          [363.0, 537.5], $
-          [324.5, 184.5], $
-          [392.0, 183.5]] 
-xr = [269, 399, 440, 331, 440, 453, 459, 388, 332, 314, $
-      312, 318, 296, 283, 249, 235, 232, 493, 468]*1.              
-yr = [209, 215, 278, 300, 281, 275, 270, 236, 231, 174, $
-      170, 155, 157, 157, 158, 144, 145, 251, 247]*1.  
-
-;for i=0, n_elements(xr)-1 do begin
-for i=2, 2 do begin
-  print, time_str[i], center[*, i], xr[i], yr[i]
-  nlfff_cal, center[*, i], xr[i], yr[i], time_str[i]
-endfor
+;time_str = ['20140704_114000', $
+;            '20140705_230030', $
+;            '20150224_190314', $
+;            '20190410_121535', $
+;            '20190412_145240', $
+;            '20190413_013438', $
+;            '20190413_113910', $
+;            '20190417_011605', $
+;            '20190417_154227', $
+;            '20200402_224709', $
+;            '20200403_011735', $
+;            '20200404_021153', $
+;            '20200405_120335', $
+;            '20200405_184659', $
+;            '20200406_164019', $
+;            '20200406_233539', $
+;            '20200407_025456', $
+;            '20190415_124334', $
+;            '20190415_215330']
+;center = [[-107.5, -243.5], $
+;          [139.5, -244.5], $
+;          [37.0, -40.0], $
+;          [-685.5, 174.0], $
+;          [-310.0, 197.5], $
+;          [-227.5, 200.5], $
+;          [-140.5, 202.0], $
+;          [595.0, 168.0], $
+;          [684.0, 158.5], $
+;          [-401.0, 540.0], $
+;          [-383.0, 542.0], $
+;          [-199.0, 547.5], $
+;          [68.0, 548.5], $
+;          [124.5, 548.5], $
+;          [289.5, 546.0], $
+;          [344.5, 540.0], $
+;          [363.0, 537.5], $
+;          [324.5, 184.5], $
+;          [392.0, 183.5]] 
+;xr = [269, 399, 440, 331, 440, 453, 459, 388, 332, 314, $
+;      312, 318, 296, 283, 249, 235, 232, 493, 468]*1.              
+;yr = [209, 215, 278, 300, 281, 275, 270, 236, 231, 174, $
+;      170, 155, 157, 157, 158, 144, 145, 251, 247]*1.  
+;
+;;for i=0, n_elements(xr)-1 do begin
+;for i=2, 2 do begin
+;  print, time_str[i], center[*, i], xr[i], yr[i]
+;  nlfff_cal, center[*, i], xr[i], yr[i], time_str[i]
+;endfor
+nlfff_cal, [-275., -75.], 175., 225., '2013-10-07 02:10:00', /save_current_path
 end
       
       

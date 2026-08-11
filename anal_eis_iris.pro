@@ -223,10 +223,10 @@ im011 = image_(amp, iris_xp, iris_yp, over=im01, min=0, max=5e2)
 im021 = image_(vel, iris_xp, iris_yp, over=im02, min=-3e1, max=3e1, rgb_table=33)
 im031 = image_(nth, iris_xp, iris_yp, over=im03, min=0, max=3e1, rgb_table=4)
 
-;im012 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im01, min=0, max=1, rgb_table=22)
-;im022 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im02, min=0, max=1, rgb_table=22)
-;im032 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im03, min=0, max=1, rgb_table=22)
-;im012.title = 'Cos i (B vs. LOS)'
+im013 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im01, min=0, max=1, rgb_table=22)
+im023 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im02, min=0, max=1, rgb_table=22)
+im033 = image_(cos_i0[*, *, 6], res_xp, res_yp, over=im03, min=0, max=1, rgb_table=22)
+im013.title = 'Cos i (B vs. LOS)'
 
 im012 = image_(data_blos, hmi_xp, hmi_yp, over=im01, min=-500, max=500, rgb_table=0)
 im022 = image_(data_blos, hmi_xp, hmi_yp, over=im02, min=-500, max=500, rgb_table=0)
